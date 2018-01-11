@@ -7,37 +7,72 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
+import lejos.robotics.navigation.DifferentialPilot;
 import lejos.utility.Delay;
 
 public class HelloWorld {
-
+	
 	public static void main(final String[] args) {
 		//touchSensorsTest();
-		ultrasonicSensorTest();
+		//ultrasonicSensorTest();
+		reachWallAndTurnRight();
 	}
 
+	private static void reachWallAndTurnRight() {
+		//Create the pilot
+		final RegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
+		final RegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
+		final DifferentialPilot differentialPilot = new DifferentialPilot(5.6f, 11.8f, leftMotor, rightMotor, false);
+		differentialPilot.setTravelSpeed(20);
+		
+		//Create the touch sensors
+		final EV3TouchSensor touchSensor1 = new EV3TouchSensor(SensorPort.S1);
+		final EV3TouchSensor touchSensor2 = new EV3TouchSensor(SensorPort.S2);
+		final SensorMode touch1 = touchSensor1.getTouchMode();
+		final SensorMode touch2 = touchSensor2.getTouchMode();
+		final float[] sample = new float[2];
+
+		//Start moving
+		differentialPilot.forward();
+
+		//Wait for an obstacle
+		do {
+			touch1.fetchSample(sample, 0);
+			touch2.fetchSample(sample, 1);
+		} while (differentialPilot.isMoving() && (sample[0] == 0 || sample[1] == 0));
+		
+		//Go backwards and turn right
+		differentialPilot.arc(5, -90);
+		Delay.msDelay(5000);
+		
+		//Close resources
+		touchSensor1.close();
+		touchSensor2.close();
+	}
+	
+	@SuppressWarnings("unused")
 	private static void ultrasonicSensorTest() {
 		//Ultrasonic sensor
 		final EV3UltrasonicSensor eyes = new EV3UltrasonicSensor(SensorPort.S4);
 		final SampleProvider eyesSampleProvider = eyes.getDistanceMode();
 		final float[] sample = new float[eyesSampleProvider.sampleSize()];
-
+		
 		//Get range
 		do {
 			eyesSampleProvider.fetchSample(sample, 0);
 			System.out.println(sample[0]);
 		} while (Button.ESCAPE.isUp());
-		
+
 		//Close resources
 		eyes.close();
 	}
-
-	@SuppressWarnings("unused")
+	
+	@Deprecated
 	private static void touchSensorsTest() {
 		//Create motors
 		final RegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
 		final RegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
-
+		
 		//Forward
 		leftMotor.setSpeed(720);// 2 RPM
 		rightMotor.setSpeed(720);
@@ -70,5 +105,5 @@ public class HelloWorld {
 		touchSensor1.close();
 		touchSensor2.close();
 	}
-	
+
 }
