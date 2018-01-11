@@ -1,20 +1,38 @@
+import lejos.hardware.Button;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3TouchSensor;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.RegulatedMotor;
+import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
 
-/**
- * Example leJOS EV3 Project with an ant build file
- */
 public class HelloWorld {
 
 	public static void main(final String[] args) {
-		touchSensorsTest();
+		//touchSensorsTest();
+		ultrasonicSensorTest();
 	}
 
+	private static void ultrasonicSensorTest() {
+		//Ultrasonic sensor
+		final EV3UltrasonicSensor eyes = new EV3UltrasonicSensor(SensorPort.S4);
+		final SampleProvider eyesSampleProvider = eyes.getDistanceMode();
+		final float[] sample = new float[eyesSampleProvider.sampleSize()];
+
+		//Get range
+		do {
+			eyesSampleProvider.fetchSample(sample, 0);
+			System.out.println(sample[0]);
+		} while (Button.ESCAPE.isUp());
+		
+		//Close resources
+		eyes.close();
+	}
+
+	@SuppressWarnings("unused")
 	private static void touchSensorsTest() {
 		//Create motors
 		final RegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
