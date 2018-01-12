@@ -1,5 +1,7 @@
 package maze;
 
+import java.util.concurrent.TimeUnit;
+
 import lejos.hardware.Button;
 import lejos.utility.Delay;
 import robot.Robot;
@@ -23,35 +25,38 @@ public class MazeSolver {
 		
 		do {
 			//Ultra son
-			final float distance2 = ultrasonicSensor.getDistance();
+			float sample = ultrasonicSensor.getDistance();
 			
 			//distance en metre
-			System.out.println("sample " + distance2);
-			Delay.msDelay(500);
+			System.out.println("sample " + sample);
 			System.out.println("distance " + distance);
-			Delay.msDelay(500);
+			System.out.println("compteur " + cpt);
 			
 			//touch sensor
 			final boolean isPressed = touchSensor.isPressed();
 			
-			if (((distance2 >= distance - 0.01 && distance2 <= distance + 0.01) || cpt == 0) && !isPressed && !robot.isMoving()) {
+			if (((sample >= distance - 0.1 && sample <= distance + 0.1) || cpt == 0) && !isPressed && !robot.isMoving()) {
 				System.out.println("Is moving");
+				sample = ultrasonicSensor.getDistance();
 				robot.forward();
 			}
-			if (distance2 > distance + 0.11) {
+			
+			if (sample > distance + 0.1 && cpt != 0) {
 				System.out.println("N'est plus contre le mur / distance :" + distance);
 				robot.stop();
 				robot.turnLeft();
+				robot.travel(5.0);
 				cpt++;
 			}
+			
 			if (isPressed) {
+				//Ultra son				
 				System.out.println("stop toi");
 				robot.stop();
 				robot.turnRight();
 				cpt--;
-				System.out.println("Sleep");
-				Delay.msDelay(3000);
-				distance = distance2;
+				sample = ultrasonicSensor.getDistance();
+				distance = sample;
 			}
 		} while (Button.ESCAPE.isUp());
 		

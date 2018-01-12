@@ -18,6 +18,10 @@ public class Robot {
 		differentialPilot.forward();
 	}
 	
+	public void travel(double distance) {
+		differentialPilot.travel(distance);;
+	}
+	
 	public void turnLeft() {
 		differentialPilot.arc(RobotConfig.TURN_RADIUS, 90);
 	}
