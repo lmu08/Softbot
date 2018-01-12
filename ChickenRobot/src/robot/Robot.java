@@ -25,4 +25,12 @@ public class Robot {
 	public void turnRight() {
 		differentialPilot.arc(RobotConfig.TURN_RADIUS, -90);
 	}
+	
+	public void stop() {
+		differentialPilot.stop();
+	}
+
+	public boolean isMoving() {
+		return differentialPilot.isMoving();
+	}
 }
