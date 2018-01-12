@@ -3,6 +3,7 @@ package robot;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.navigation.DifferentialPilot;
+import sensors.TouchSensor;
 
 public class Robot {
 	final DifferentialPilot differentialPilot;
@@ -24,6 +25,24 @@ public class Robot {
 	
 	public void turnRight() {
 		differentialPilot.arc(RobotConfig.TURN_RADIUS, -90);
+	}
+	
+	/**
+	 * In progress. Currently, the robot reaches the wall, turns right, and stops.<br/>
+	 * TODO Use the ultrasonic sensor
+	 */
+	public void solveMaze() {
+		final TouchSensor touchSensor = new TouchSensor();
+		
+		//Move until the wall and turn right.
+		forward();
+		while (!touchSensor.isPressed()) {
+			//Wait for an obstacle
+		}
+		turnRight();
+
+		//Close resources.
+		touchSensor.close();
 	}
 	
 }

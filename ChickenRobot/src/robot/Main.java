@@ -10,40 +10,16 @@ import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 import lejos.utility.Delay;
-import sensors.TouchSensor;
 
 public class Main {
-	
 	public static void main(final String[] args) {
-		reachWallAndTurnRight();
-	}
-	
-	/**
-	 * TODO Use the ultrasonic sensor
-	 */
-	private static void reachWallAndTurnRight() {
-		//Create the pilot and the sensors
 		final Robot robot = new Robot();
-		final TouchSensor touchSensor = new TouchSensor();
-		
-		//Start moving
-		robot.forward();
-		
-		while (!touchSensor.isPressed()) {
-			//Wait for an obstacle
-		}
-		
-		//Go backwards and turn right
-		robot.turnRight();
-		
+		robot.solveMaze();
 		Delay.msDelay(5000);
-		
-		//Close resources
-		touchSensor.close();
 	}
 	
 	/**
-	 * Sample code, not up-to-date.
+	 * Sample code for ultrasonic sensors, not up-to-date.
 	 */
 	@SuppressWarnings("unused")
 	@Deprecated
@@ -52,19 +28,19 @@ public class Main {
 		final EV3UltrasonicSensor eyes = new EV3UltrasonicSensor(SensorPort.S4);
 		final SampleProvider eyesSampleProvider = eyes.getDistanceMode();
 		final float[] sample = new float[eyesSampleProvider.sampleSize()];
-		
+
 		//Get range
 		do {
 			eyesSampleProvider.fetchSample(sample, 0);
 			System.out.println(sample[0]);
 		} while (Button.ESCAPE.isUp());
-		
+
 		//Close resources
 		eyes.close();
 	}
-	
+
 	/**
-	 * Sample code, not up-to-date.
+	 * Sample code for touch sensors, not up-to-date.
 	 */
 	@SuppressWarnings("unused")
 	@Deprecated
@@ -72,38 +48,38 @@ public class Main {
 		//Create motors
 		final RegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
 		final RegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
-		
+
 		//Forward
 		leftMotor.setSpeed(720);// 2 RPM
 		rightMotor.setSpeed(720);
 		leftMotor.forward();
 		rightMotor.forward();
-		
+
 		//Touch sensor
 		final EV3TouchSensor touchSensor1 = new EV3TouchSensor(SensorPort.S1);
 		final EV3TouchSensor touchSensor2 = new EV3TouchSensor(SensorPort.S2);
 		final SensorMode touch1 = touchSensor1.getTouchMode();
 		final SensorMode touch2 = touchSensor2.getTouchMode();
 		final float[] sample = new float[2];
-		
+
 		//Wait for obstacle
 		do {
 			touch1.fetchSample(sample, 0);
 			touch2.fetchSample(sample, 1);
 		} while (leftMotor.isMoving() && rightMotor.isMoving() && ((sample[0] == 0) || (sample[1] == 0)));
-		
+
 		//Go backwards
 		leftMotor.backward();
 		rightMotor.backward();
 		Delay.msDelay(1000);
 		leftMotor.stop();
 		rightMotor.stop();
-		
+
 		//Close resources
 		leftMotor.close();
 		rightMotor.close();
 		touchSensor1.close();
 		touchSensor2.close();
 	}
-	
+
 }

@@ -16,13 +16,13 @@ implements Closeable {
 		rightTouchSensor = new EV3TouchSensor(RobotConfig.RIGHT_TOUCH_SENSOR_PORT);
 		sample = new float[2];
 	}
-	
+
 	public boolean isPressed() {
 		leftTouchSensor.getTouchMode().fetchSample(sample, 0);
 		rightTouchSensor.getTouchMode().fetchSample(sample, 1);
 		return (sample[0] != 0) || (sample[1] != 0);
 	}
-	
+
 	@Override
 	public void close() {
 		leftTouchSensor.close();
