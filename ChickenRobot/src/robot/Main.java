@@ -1,3 +1,5 @@
+package robot;
+
 import lejos.hardware.Button;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
@@ -7,50 +9,44 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.hardware.sensor.SensorMode;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
-import lejos.robotics.navigation.DifferentialPilot;
 import lejos.utility.Delay;
+import sensors.TouchSensor;
 
-public class HelloWorld {
+public class Main {
 	
 	public static void main(final String[] args) {
-		//touchSensorsTest();
-		//ultrasonicSensorTest();
 		reachWallAndTurnRight();
 	}
-
+	
+	/**
+	 * TODO Use the ultrasonic sensor
+	 */
 	private static void reachWallAndTurnRight() {
-		//Create the pilot
-		final RegulatedMotor leftMotor = new EV3LargeRegulatedMotor(MotorPort.B);
-		final RegulatedMotor rightMotor = new EV3LargeRegulatedMotor(MotorPort.C);
-		final DifferentialPilot differentialPilot = new DifferentialPilot(5.6f, 11.8f, leftMotor, rightMotor, false);
-		differentialPilot.setTravelSpeed(20);
+		//Create the pilot and the sensors
+		final Robot robot = new Robot();
+		final TouchSensor touchSensor = new TouchSensor();
 		
-		//Create the touch sensors
-		final EV3TouchSensor touchSensor1 = new EV3TouchSensor(SensorPort.S1);
-		final EV3TouchSensor touchSensor2 = new EV3TouchSensor(SensorPort.S2);
-		final SensorMode touch1 = touchSensor1.getTouchMode();
-		final SensorMode touch2 = touchSensor2.getTouchMode();
-		final float[] sample = new float[2];
-
 		//Start moving
-		differentialPilot.forward();
-
-		//Wait for an obstacle
-		do {
-			touch1.fetchSample(sample, 0);
-			touch2.fetchSample(sample, 1);
-		} while (differentialPilot.isMoving() && (sample[0] == 0 || sample[1] == 0));
+		robot.forward();
+		
+		while (!touchSensor.isPressed()) {
+			//Wait for an obstacle
+		}
 		
 		//Go backwards and turn right
-		differentialPilot.arc(5, -90);
+		robot.turnRight();
+		
 		Delay.msDelay(5000);
 		
 		//Close resources
-		touchSensor1.close();
-		touchSensor2.close();
+		touchSensor.close();
 	}
 	
+	/**
+	 * Sample code, not up-to-date.
+	 */
 	@SuppressWarnings("unused")
+	@Deprecated
 	private static void ultrasonicSensorTest() {
 		//Ultrasonic sensor
 		final EV3UltrasonicSensor eyes = new EV3UltrasonicSensor(SensorPort.S4);
@@ -62,11 +58,15 @@ public class HelloWorld {
 			eyesSampleProvider.fetchSample(sample, 0);
 			System.out.println(sample[0]);
 		} while (Button.ESCAPE.isUp());
-
+		
 		//Close resources
 		eyes.close();
 	}
 	
+	/**
+	 * Sample code, not up-to-date.
+	 */
+	@SuppressWarnings("unused")
 	@Deprecated
 	private static void touchSensorsTest() {
 		//Create motors
@@ -90,7 +90,7 @@ public class HelloWorld {
 		do {
 			touch1.fetchSample(sample, 0);
 			touch2.fetchSample(sample, 1);
-		} while (leftMotor.isMoving() && rightMotor.isMoving() && (sample[0] == 0 || sample[1] == 0));
+		} while (leftMotor.isMoving() && rightMotor.isMoving() && ((sample[0] == 0) || (sample[1] == 0)));
 		
 		//Go backwards
 		leftMotor.backward();
@@ -105,5 +105,5 @@ public class HelloWorld {
 		touchSensor1.close();
 		touchSensor2.close();
 	}
-
+	
 }
