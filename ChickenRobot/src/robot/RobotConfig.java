@@ -21,7 +21,7 @@ public final class RobotConfig {
 	/** Wheel diameter of the robot (in cm). */
 	public static final double WHEEL_DIAMETER = 5.56;
 	/** Distance between the center of the two wheels of our robot (in cm). */
-	public static final double TRACK_WIDTH = 12;
+	public static final double TRACK_WIDTH = 13;
 	/** Radius of the circle that the robot follows when turning (in cm). */
 	public static final double TURN_RADIUS = 10;
 	/** Base speed of the robot (in cm/s) */

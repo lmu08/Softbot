@@ -23,11 +23,13 @@ public class Robot {
 	}
 	
 	public void turnLeft() {
-		differentialPilot.arc(RobotConfig.TURN_RADIUS, 90);
+		differentialPilot.arc(RobotConfig.TURN_RADIUS, 45);
+		differentialPilot.arc(-RobotConfig.TURN_RADIUS, 45);
 	}
 	
 	public void turnRight() {
-		differentialPilot.arc(RobotConfig.TURN_RADIUS, -90);
+		differentialPilot.arc(RobotConfig.TURN_RADIUS, -45);
+		differentialPilot.arc(-RobotConfig.TURN_RADIUS, -45);
 	}
 	
 	public void stop() {
