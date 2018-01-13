@@ -20,7 +20,7 @@ implements Closeable {
 	public boolean isPressed() {
 		leftTouchSensor.getTouchMode().fetchSample(sample, 0);
 		rightTouchSensor.getTouchMode().fetchSample(sample, 1);
-		return (sample[0] != 0) && (sample[1] != 0);
+		return (sample[0] != 0) || (sample[1] != 0);
 	}
 	
 	@Override

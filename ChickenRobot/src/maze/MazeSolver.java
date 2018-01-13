@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 import lejos.hardware.Button;
 import lejos.utility.Delay;
 import robot.Robot;
+import sensors.ColorSensor;
 import sensors.TouchSensor;
 import sensors.UltrasonicSensor;
 
@@ -16,6 +17,7 @@ public class MazeSolver {
 	public static void solveMaze(final Robot robot) {
 		final TouchSensor touchSensor = new TouchSensor();
 		final UltrasonicSensor ultrasonicSensor = new UltrasonicSensor();
+		final ColorSensor colorSensor = new ColorSensor();
 		
 		//Move
 		robot.forward();
@@ -35,24 +37,33 @@ public class MazeSolver {
 			//touch sensor
 			final boolean isPressed = touchSensor.isPressed();
 			
-			//A côté d'un mur
+			//color sensor
+			final boolean redIsFound = colorSensor.redIsFound();
+			
+			//Cas où le robot est à côté d'un mur
 			if (((sample >= distance - 0.1 && sample <= distance + 0.1) || cpt == 0) && !isPressed && !robot.isMoving()) {
 				System.out.println("Is moving");
 				sample = ultrasonicSensor.getDistance();
 				robot.forward();
 			}
 			
-			//PLus à côté d'un mur
-			if (sample > distance + 0.2) {
+			//Cas où le robot n'est plus à côté d'un mur
+			if ((sample > distance + 0.15 || sample > 0.4) && cpt != 0) {
 				System.out.println("N'est plus contre le mur / distance :" + distance);
 				robot.stop();
 				robot.turnLeft();
 				robot.travel(35.0);
-				cpt++;
 				sample = ultrasonicSensor.getDistance();
 				distance = sample;
+				cpt++;
 			}
 			
+			//Recalibrage du robot si trop proche du mur
+			if(sample < 0.05) {
+				robot.moveAside();
+			}
+			
+			//Si le robot touche un obstacle/mur
 			if (isPressed) {
 				//Ultra son				
 				System.out.println("stop toi");
@@ -62,11 +73,21 @@ public class MazeSolver {
 				sample = ultrasonicSensor.getDistance();
 				distance = sample;
 			}
+			
+			//Si le robot arrive à la ligne rouge
+			if(redIsFound) {
+				robot.stop();
+				System.out.println("Je suis arrivé");
+				robot.travel(17.0);
+				robot.stop();
+				System.exit(0);
+			}
 		} while (Button.ESCAPE.isUp());
 		
 		//Close resources
 		touchSensor.close();
 		ultrasonicSensor.close();
+		colorSensor.close();
 	}
 	
 	/**

@@ -32,6 +32,13 @@ public class Robot {
 		differentialPilot.arc(-RobotConfig.TURN_RADIUS, -45);
 	}
 	
+	public void moveAside() {
+		differentialPilot.rotate(35);
+		differentialPilot.travel(-7);
+		differentialPilot.rotate(-35);
+		differentialPilot.travel(7);
+	}
+	
 	public void stop() {
 		differentialPilot.stop();
 	}
