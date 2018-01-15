@@ -19,6 +19,8 @@ implements Closeable {
 	 * Constructor. Creates a new color sensor that uses the colorId mode.
 	 */
 	public ColorSensor() {
+		assert (RobotConfig.COLOR_SENSOR_PORT != null);
+		
 		colorSensor = new EV3ColorSensor(RobotConfig.COLOR_SENSOR_PORT);
 		colorMode = colorSensor.getColorIDMode();
 		sample = new float[colorMode.sampleSize()];
@@ -30,6 +32,9 @@ implements Closeable {
 	 * @return <code>true</code> if red is found, <code>false</code> otherwise
 	 */
 	public boolean redIsFound() {
+		assert (sample.length >= 1);
+		assert (colorMode != null);
+		
 		colorMode.fetchSample(sample, 0);
 		return sample[0] == 0;
 	}

@@ -7,6 +7,7 @@ public class Main {
 		try {
 			final Robot robot = new Robot();
 			MazeSolver.solve(robot);
+			assert (MazeSolver.isMazeSolved() == true ^ MazeSolver.isResolutionAborted() == true);
 		} catch (final IllegalArgumentException e) { //"Invalid sensor mode" error occurs randomly
 			System.out.println("An error occured. Detailed message :");
 			e.printStackTrace();
