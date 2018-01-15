@@ -9,7 +9,7 @@ import lejos.robotics.navigation.DifferentialPilot;
  */
 public class Robot {
 	private final DifferentialPilot differentialPilot;
-
+	
 	/**
 	 * Constructor. Creates a new Robot with 2 wheels, each one connected to a motor.
 	 */
@@ -19,14 +19,14 @@ public class Robot {
 		differentialPilot = new DifferentialPilot(RobotConfig.WHEEL_DIAMETER, RobotConfig.TRACK_WIDTH, leftMotor, rightMotor, false);
 		differentialPilot.setTravelSpeed(RobotConfig.TRAVEL_SPEED);
 	}
-
+	
 	/**
 	 * Starts the robot moving forward.
 	 */
 	public void forward() {
 		differentialPilot.forward();
 	}
-
+	
 	/**
 	 * Moves the robot a specific distance in a (hopefully) straight line.
 	 *
@@ -35,7 +35,7 @@ public class Robot {
 	public void travel(final double distance) {
 		differentialPilot.travel(distance);
 	}
-
+	
 	/**
 	 * Turns the robot to the left. </br>
 	 * The robot starts by moving backwards, 45 degrees along an arc to the left.
@@ -46,7 +46,7 @@ public class Robot {
 		differentialPilot.arc(RobotConfig.TURN_RADIUS, 45);
 		differentialPilot.arc(-RobotConfig.TURN_RADIUS, 45);
 	}
-
+	
 	/**
 	 * Turns the robot to the right. </br>
 	 * The robot starts by moving backwards, 45 degrees along an arc to the right.
@@ -57,21 +57,24 @@ public class Robot {
 		differentialPilot.arc(RobotConfig.TURN_RADIUS, -45);
 		differentialPilot.arc(-RobotConfig.TURN_RADIUS, -45);
 	}
-	
-	public void moveAside() {
-		differentialPilot.rotate(35);
-		differentialPilot.travel(-7);
-		differentialPilot.rotate(-35);
-		differentialPilot.travel(7);
-	}
 
+	/**
+	 * Moves the robot a few centimeters to the right.
+	 */
+	public void moveAside() {
+		differentialPilot.rotate(RobotConfig.STEP_AWAY_ANGLE);
+		differentialPilot.travel(-RobotConfig.STEP_AWAY_DISTANCE);
+		differentialPilot.rotate(-RobotConfig.STEP_AWAY_ANGLE);
+		differentialPilot.travel(RobotConfig.STEP_AWAY_DISTANCE);
+	}
+	
 	/**
 	 * Stops the robot.
 	 */
 	public void stop() {
 		differentialPilot.stop();
 	}
-	
+
 	/**
 	 * Checks if the robot is moving.
 	 *
