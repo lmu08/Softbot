@@ -14,7 +14,7 @@ implements Closeable {
 	final EV3ColorSensor colorSensor;
 	final SensorMode colorMode;
 	final float[] sample;
-	
+
 	/**
 	 * Constructor. Creates a new color sensor that uses the colorId mode.
 	 */
@@ -23,7 +23,7 @@ implements Closeable {
 		colorMode = colorSensor.getColorIDMode();
 		sample = new float[colorMode.sampleSize()];
 	}
-
+	
 	/**
 	 * Checks if the red color is detected by the sensor.
 	 *
@@ -33,7 +33,7 @@ implements Closeable {
 		colorMode.fetchSample(sample, 0);
 		return sample[0] == 0;
 	}
-	
+
 	@Override
 	public void close() {
 		colorSensor.close();
