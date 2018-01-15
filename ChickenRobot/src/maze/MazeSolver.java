@@ -1,6 +1,10 @@
 package maze;
 
+import java.io.File;
+
 import lejos.hardware.Button;
+import lejos.hardware.Sound;
+import lejos.utility.Delay;
 import robot.Robot;
 import robot.RobotConfig;
 import sensors.ColorSensor;
@@ -27,12 +31,20 @@ public class MazeSolver {
 		int cpt = 0; //Counts when the robot is turning right or left
 
 		robot.forward();
-		waitForRed(colorSensor);
+		final Thread redChecker = waitForRed(colorSensor, robot);
 		
 		//Begin the main maze resolution algorithm
 		do {
 			float sample = ultrasonicSensor.getDistance();
 			final boolean isPressed = touchSensor.isPressed();
+
+			//On red color
+			if (!redChecker.isAlive()) {
+				robot.stop();
+				Sound.playSample(new File("/home/root/secret.wav"));
+				Delay.msDelay(1500);
+				System.exit(0);
+			}
 			
 			//Next to a wall
 			if ((Math.abs(distance - sample) <= RobotConfig.ULTRASONIC_SENSOR_MARGIN || cpt == 0) && !isPressed && !robot.isMoving()) {
@@ -76,17 +88,18 @@ public class MazeSolver {
 	 * Waits for the sensor to detect the red color, and stops the program.
 	 *
 	 * @param colorSensor the color sensor to use
+	 * @return
 	 */
-	private static void waitForRed(final ColorSensor colorSensor) {
-		new Thread(new Runnable() {
+	private static Thread waitForRed(final ColorSensor colorSensor, final Robot robot) {
+		final Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (!colorSensor.redIsFound()) {
 					//wait
 				}
-				//TODO Make a sound ?
-				System.exit(0);
 			}
-		}).start();
+		});
+		thread.start();
+		return thread;
 	}
 }

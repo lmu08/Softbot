@@ -25,7 +25,7 @@ implements Closeable {
 	}
 
 	/**
-	 * Checks if the color red is detected by the sensor.
+	 * Checks if the red color is detected by the sensor.
 	 *
 	 * @return <code>true</code> if red is found, <code>false</code> otherwise
 	 */

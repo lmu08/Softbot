@@ -60,10 +60,10 @@ public final class RobotConfig {
 	public static final double TRAVEL_SPEED = 20;
 	
 	/** Distance that the robot sould travel when stepping away (in cm). */
-	public static final double STEP_AWAY_DISTANCE = 7;
+	public static final double STEP_AWAY_DISTANCE = 10;
 	
 	/** Angle that the robot should use when stepping away (in degrees). */
-	public static final double STEP_AWAY_ANGLE = 35;
+	public static final double STEP_AWAY_ANGLE = 25;
 
 	/** Error margin for the measures of the ultrasonic sensor (meters). */
 	public static final float ULTRASONIC_SENSOR_MARGIN = 0.1f;
