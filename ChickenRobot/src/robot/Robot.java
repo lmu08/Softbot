@@ -14,6 +14,12 @@ public class Robot {
 	 * Constructor. Creates a new Robot with 2 wheels, each one connected to a motor.
 	 */
 	public Robot() {
+		assert (RobotConfig.LEFT_MOTOR_PORT != null);
+		assert (RobotConfig.RIGHT_MOTOR_PORT != null);
+		assert (RobotConfig.WHEEL_DIAMETER > 0);
+		assert (RobotConfig.TRACK_WIDTH > 0);
+		assert (RobotConfig.TRAVEL_SPEED > 0);
+
 		final RegulatedMotor leftMotor = new EV3LargeRegulatedMotor(RobotConfig.LEFT_MOTOR_PORT);
 		final RegulatedMotor rightMotor = new EV3LargeRegulatedMotor(RobotConfig.RIGHT_MOTOR_PORT);
 		differentialPilot = new DifferentialPilot(RobotConfig.WHEEL_DIAMETER, RobotConfig.TRACK_WIDTH, leftMotor, rightMotor, false);

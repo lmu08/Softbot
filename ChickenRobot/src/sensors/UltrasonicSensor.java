@@ -17,6 +17,8 @@ implements Closeable {
 	 * Contructor. Creates a new UltrasonicSensor that uses an EV3UltrasonicSensor.
 	 */
 	public UltrasonicSensor() {
+		assert (RobotConfig.ULTRASONIC_SENSOR_PORT != null);
+
 		sensor = new EV3UltrasonicSensor(RobotConfig.ULTRASONIC_SENSOR_PORT);
 		sample = new float[sensor.getDistanceMode().sampleSize()];
 	}
@@ -27,6 +29,9 @@ implements Closeable {
 	 * @return the distance in meters
 	 */
 	public float getDistance() {
+		assert (sample.length >= 1);
+		assert (sensor != null);
+		
 		sensor.getDistanceMode().fetchSample(sample, 0);
 		return sample[0];
 	}

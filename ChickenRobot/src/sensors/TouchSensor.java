@@ -18,6 +18,9 @@ implements Closeable {
 	 * Contructor. Creates a new TouchSensor that represents 2 EV3TouchSensor.
 	 */
 	public TouchSensor() {
+		assert (RobotConfig.LEFT_TOUCH_SENSOR_PORT != null);
+		assert (RobotConfig.RIGHT_TOUCH_SENSOR_PORT != null);
+
 		leftTouchSensor = new EV3TouchSensor(RobotConfig.LEFT_TOUCH_SENSOR_PORT);
 		rightTouchSensor = new EV3TouchSensor(RobotConfig.RIGHT_TOUCH_SENSOR_PORT);
 		sample = new float[2];
@@ -29,6 +32,10 @@ implements Closeable {
 	 * @return <code>true</code> if both sensors are pressed, <code>false</code> otherwise.
 	 */
 	public boolean isPressed() {
+		assert (sample.length >= 2);
+		assert (leftTouchSensor != null);
+		assert (rightTouchSensor != null);
+		
 		leftTouchSensor.getTouchMode().fetchSample(sample, 0);
 		rightTouchSensor.getTouchMode().fetchSample(sample, 1);
 		return (sample[0] != 0) || (sample[1] != 0);
