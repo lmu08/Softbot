@@ -2,6 +2,11 @@ package maze;
 
 import robot.Robot;
 
+/**
+ * 
+ * @author Héloïse, Katia, Musa, Lucas, Florent
+ *
+ */
 public class Main {
 	public static void main(final String[] args) {
 		try {
